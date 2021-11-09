@@ -9,6 +9,10 @@ export interface PostPageProps {
 export default function PostDetailPage({ post }: PostPageProps) {
 	const router = useRouter()
 
+	if (router.isFallback) {
+		return <div style={{ fontSize: '2rem', textAlign: 'center' }}>Loading...</div>
+	}
+
 	if (!post) return null
 
 	return (
@@ -29,7 +33,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 	return {
 		paths: data.data.map((post: any) => ({ params: { postId: post.id } })),
-		fallback: false,
+		// fallback: false,
+		// fallback: 'blocking',
+		fallback: true,
 	}
 }
 
@@ -47,5 +53,6 @@ export const getStaticProps: GetStaticProps<PostPageProps> = async (
 		props: {
 			post: data,
 		},
+		revalidate: 5,
 	}
 }
